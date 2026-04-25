@@ -1038,8 +1038,8 @@
 
   <script>
     (function () {
-      // Swap the placehold.co URLs below for local paths once real photos are
-      // dropped in (e.g. "images/gallery/project-1-before.jpg").
+      // Real photos live in images/gallery/. Drop in files matching the
+      // before/after paths below; if a file is missing, the placeholder shows.
       var BEFORE_PLACEHOLDER = "https://placehold.co/800x600/1a1a1a/f5f5f5?text=Before";
       var AFTER_PLACEHOLDER  = "https://placehold.co/800x600/4a4a4a/f5f5f5?text=After";
 
@@ -1049,8 +1049,8 @@
           title: "Historic Facade Restoration",
           category: "Historic Restoration",
           location: "Vallejo, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-1-before.jpg",
+          after: "images/gallery/project-1-after.jpg",
           description: "Full exterior restoration of a Victorian-era facade. Original materials preserved, structural damage repaired."
         },
         {
@@ -1058,8 +1058,8 @@
           title: "Kitchen Renovation",
           category: "General Construction",
           location: "Benicia, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-2-before.jpg",
+          after: "images/gallery/project-2-after.jpg",
           description: "Complete kitchen gut and rebuild. New framing, plumbing rough-in, custom cabinetry install."
         },
         {
@@ -1067,8 +1067,8 @@
           title: "Bathroom Remodel",
           category: "Handyman Services",
           location: "Vallejo, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-3-before.jpg",
+          after: "images/gallery/project-3-after.jpg",
           description: "Full bathroom remodel — tile, fixtures, vanity, and waterproofing."
         },
         {
@@ -1076,8 +1076,8 @@
           title: "Deck Rebuild",
           category: "General Construction",
           location: "Fairfield, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-4-before.jpg",
+          after: "images/gallery/project-4-after.jpg",
           description: "Full deck tear-down and rebuild. Composite decking, new ledger board, reinforced posts."
         },
         {
@@ -1085,8 +1085,8 @@
           title: "Window Restoration",
           category: "Historic Restoration",
           location: "Napa, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-5-before.jpg",
+          after: "images/gallery/project-5-after.jpg",
           description: "Period-accurate wood window restoration. Original glass preserved, glazing resealed."
         },
         {
@@ -1094,11 +1094,19 @@
           title: "Exterior Paint & Repair",
           category: "Handyman Services",
           location: "Vallejo, CA",
-          before: BEFORE_PLACEHOLDER,
-          after: AFTER_PLACEHOLDER,
+          before: "images/gallery/project-6-before.jpg",
+          after: "images/gallery/project-6-after.jpg",
           description: "Full exterior prep, wood rot repair, prime and paint. Clean finish, tight lines."
         }
       ];
+
+      function attachFallback(imgEl, fallbackSrc) {
+        imgEl.addEventListener("error", function () {
+          if (imgEl.src.indexOf("placehold.co") === -1) {
+            imgEl.src = fallbackSrc;
+          }
+        });
+      }
 
       var grid = document.getElementById("gallery-grid");
       var lightbox = document.getElementById("lightbox");
@@ -1115,6 +1123,9 @@
       var prevBtn = lightbox.querySelector(".lb-prev");
       var nextBtn = lightbox.querySelector(".lb-next");
       var overlay = lightbox.querySelector(".lightbox-overlay");
+
+      attachFallback(beforeImg, BEFORE_PLACEHOLDER);
+      attachFallback(afterImg, AFTER_PLACEHOLDER);
 
       var currentIndex = 0;
       var lastFocused = null;
@@ -1145,8 +1156,9 @@
         beforeWrap.className = "card-before";
         var beforeImgEl = document.createElement("img");
         beforeImgEl.loading = "lazy";
-        beforeImgEl.src = p.before;
         beforeImgEl.alt = "Before — " + p.title;
+        attachFallback(beforeImgEl, BEFORE_PLACEHOLDER);
+        beforeImgEl.src = p.before;
         var beforeLabel = document.createElement("span");
         beforeLabel.className = "img-label";
         beforeLabel.textContent = "Before";
@@ -1160,8 +1172,9 @@
         afterWrap.className = "card-after";
         var afterImgEl = document.createElement("img");
         afterImgEl.loading = "lazy";
-        afterImgEl.src = p.after;
         afterImgEl.alt = "After — " + p.title;
+        attachFallback(afterImgEl, AFTER_PLACEHOLDER);
+        afterImgEl.src = p.after;
         var afterLabel = document.createElement("span");
         afterLabel.className = "img-label";
         afterLabel.textContent = "After";
